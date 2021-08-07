@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
@@ -7,15 +7,17 @@ import "codemirror/mode/css/css"
 import "codemirror/mode/javascript/javascript"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExpandAlt, faCompressAlt } from '@fortawesome/free-solid-svg-icons'
+import { AppContext } from '../context/AppContext';
 import "../index.css"
 
 const Editor = (props) => {
-    const [open, setOpen] = useState(true)
+    const [open, setOpen] = useState(true);
+    const [roomId, setRoomId] = useContext(AppContext)
     const { launguage, label, value, onChange, socket } = props
 
     const handleChange = (editor, data, value) => {
         onChange(value)
-        socket.emit('updateCode', { launguage, value })
+        socket.emit('updateCode', { launguage, value }, roomId)
     }
 
     return (
