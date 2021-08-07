@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Editor from "./components/Editor"
-import useLocalStorage from "./hooks/useLocalStorage"
+import Header from "./components/Header"
+// import useLocalStorage from "./hooks/useLocalStorage"
 import io from "socket.io-client";
 
 const socket = io.connect("http://localhost:5000");
@@ -10,12 +11,13 @@ function App() {
   const [css, setCss] = useState('')
   const [javascript, setJavascript] = useState('')
   const [srcDoc, setSrcDoc] = useState('')
-
-  // const updateCode = () => {
-  //   socket.emit('updateCode', { html, css, javascript })
-  // }
+  const [sessionId, setSessionId] = useState('');
 
   useEffect(() => {
+    socket.on('connect', () => {
+      const id = socket.id;
+      setSessionId(id);
+    })
     socket.on('updateCode', ({ launguage, value }) => {
       switch (launguage) {
         case 'xml':
@@ -32,10 +34,6 @@ function App() {
       }
     })
   })
-
-  // useEffect(() => {
-  //   updateCode();
-  // }, [html, css, javascript])
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -54,41 +52,44 @@ function App() {
 
 
   return (
-    <div className="app">
-      <div className="pane top-pane">
-        <Editor
-          socket={socket}
-          launguage="xml"
-          label="HTML"
-          value={html}
-          onChange={setHtml}
-        />
-        <Editor
-          socket={socket}
-          launguage="css"
-          label="CSS"
-          value={css}
-          onChange={setCss}
-        />
-        <Editor
-          socket={socket}
-          launguage="javascript"
-          label="JS"
-          value={javascript}
-          onChange={setJavascript}
-        />
+    <>
+      <Header id={sessionId} />
+      <div className="app">
+        <div className="pane top-pane">
+          <Editor
+            socket={socket}
+            launguage="xml"
+            label="HTML"
+            value={html}
+            onChange={setHtml}
+          />
+          <Editor
+            socket={socket}
+            launguage="css"
+            label="CSS"
+            value={css}
+            onChange={setCss}
+          />
+          <Editor
+            socket={socket}
+            launguage="javascript"
+            label="JS"
+            value={javascript}
+            onChange={setJavascript}
+          />
+        </div>
+        <div className="bottom-pane">
+          <iframe
+            srcDoc={srcDoc}
+            title="output"
+            sandbox="allow-scripts"
+            frameBorder="0"
+            width="100%"
+            height="100%"
+          ></iframe>
+        </div>
       </div>
-      <div className="bottom-pane">
-        <iframe
-          srcDoc={srcDoc}
-          title="output"
-          sandbox="allow-scripts"
-          frameBorder="0"
-          width="100%"
-          height="100%"
-        ></iframe>
-      </div>
-    </div>
+    </>
   );
 }
 

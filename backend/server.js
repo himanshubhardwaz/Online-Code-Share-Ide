@@ -9,10 +9,10 @@ const io = require('socket.io')(server, {
 });
 
 io.on('connection', (socket) => {
-    console.log("socket", socket);
+    console.log("socket id", socket.id);
     console.log("socket is active to be connected");
     socket.on('updateCode', (payload) => {
-        console.log("payload", payload);
+        // console.log("payload", payload);
         socket.broadcast.emit('updateCode', payload);
     })
 })

@@ -61,3 +61,18 @@ body {
   border-bottom-left-radius: .5rem;
   overflow: hidden;
 }
+
+.navbar-brand-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 40px;
+  margin-right: 20px;
+}
+
+.brand-container {
+  display: flex;
+}
+
