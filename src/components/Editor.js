@@ -11,10 +11,11 @@ import "../index.css"
 
 const Editor = (props) => {
     const [open, setOpen] = useState(true)
-    const { launguage, label, value, onChange } = props
+    const { launguage, label, value, onChange, socket } = props
 
     const handleChange = (editor, data, value) => {
         onChange(value)
+        socket.emit('updateCode', { launguage, value })
     }
 
     return (

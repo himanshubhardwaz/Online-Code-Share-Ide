@@ -6,56 +6,74 @@ import io from "socket.io-client";
 const socket = io.connect("http://localhost:5000");
 
 function App() {
-  const [html, setHtml] = useLocalStorage('html', '')
-  const [css, setCss] = useLocalStorage('css', '')
-  const [javascript, setJavascript] = useLocalStorage('javascript', '')
+  const [html, setHtml] = useState('')
+  const [css, setCss] = useState('')
+  const [javascript, setJavascript] = useState('')
   const [srcDoc, setSrcDoc] = useState('')
 
-  const updateCode = () => {
-    socket.emit('updateCode', { html, css, javascript })
-  }
+  // const updateCode = () => {
+  //   socket.emit('updateCode', { html, css, javascript })
+  // }
 
   useEffect(() => {
-    socket.on('updateCode', (payload) => {
-      setHtml(payload.html);
-      setCss(payload.css);
-      setJavascript(payload.javascript)
+    socket.on('updateCode', ({ launguage, value }) => {
+      switch (launguage) {
+        case 'xml':
+          setHtml(value);
+          break;
+        case 'css':
+          setCss(value);
+          break;
+        case 'javascript':
+          setJavascript(value);
+          break;
+        default:
+          return
+      }
     })
-  }, [])
+  })
+
+  // useEffect(() => {
+  //   updateCode();
+  // }, [html, css, javascript])
 
   useEffect(() => {
-    // const timeout = setTimeout(() => {
-    setSrcDoc(`
+    const timeout = setTimeout(() => {
+      setSrcDoc(`
         <html>
           <body>${html}</body>
           <style>${css}</style>
           <script>${javascript}</script>
         </html>
       `);
-    updateCode();
-    // }, 250)
-    // console.log(srcDoc)
-    // return () => clearTimeout(timeout)
+    }, 250)
+    console.log(srcDoc)
+    return () => clearTimeout(timeout)
   }, [html, css, javascript])
+
+
 
   return (
     <div className="app">
       <div className="pane top-pane">
         <Editor
+          socket={socket}
           launguage="xml"
           label="HTML"
           value={html}
           onChange={setHtml}
         />
         <Editor
+          socket={socket}
           launguage="css"
           label="CSS"
           value={css}
           onChange={setCss}
         />
         <Editor
+          socket={socket}
           launguage="javascript"
-          label="JavaScript"
+          label="JS"
           value={javascript}
           onChange={setJavascript}
         />

@@ -13,7 +13,7 @@ io.on('connection', (socket) => {
     console.log("socket is active to be connected");
     socket.on('updateCode', (payload) => {
         console.log("payload", payload);
-        io.emit('updateCode', payload);
+        socket.broadcast.emit('updateCode', payload);
     })
 })
 
