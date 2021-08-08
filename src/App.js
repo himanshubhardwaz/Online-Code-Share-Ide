@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Editor from "./components/Editor"
 import Header from "./components/Header"
-import io from "socket.io-client";
 import { AppContext } from './context/AppContext';
-
-const socket = io.connect("http://localhost:5000");
 
 function App() {
   const [html, setHtml] = useState('')
@@ -12,7 +9,8 @@ function App() {
   const [javascript, setJavascript] = useState('')
   const [srcDoc, setSrcDoc] = useState('')
   const [sessionId, setSessionId] = useState('');
-  const [roomId, setRoomId] = useContext(AppContext);
+  const { roomState: [roomId, setRoomId] } = useContext(AppContext);
+  const { socket } = useContext(AppContext);
 
   useEffect(() => {
     socket.on('connect', () => {

@@ -12,8 +12,8 @@ import "../index.css"
 
 const Editor = (props) => {
     const [open, setOpen] = useState(true);
-    const [roomId, setRoomId] = useContext(AppContext)
-    const { launguage, label, value, onChange, socket } = props
+    const { roomState: [roomId, setRoomId], socket } = useContext(AppContext);
+    const { launguage, label, value, onChange } = props
 
     const handleChange = (editor, data, value) => {
         onChange(value)

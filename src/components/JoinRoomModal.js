@@ -4,7 +4,7 @@ import { Button, Form } from "react-bootstrap"
 import { AppContext } from "../context/AppContext"
 
 const JoinRoomModal = (props) => {
-    const [roomId, setRoomId] = useContext(AppContext)
+    const { roomState: [roomId, setRoomId], socket } = useContext(AppContext);
     const [id, setId] = useState("");
 
     const handleChange = (e) => {
@@ -13,6 +13,7 @@ const JoinRoomModal = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        socket.emit("join-room", id);
         setRoomId(id)
     }
 

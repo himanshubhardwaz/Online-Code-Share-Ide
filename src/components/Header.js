@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import JoinRoomModal from "./JoinRoomModal";
+import { AppContext } from "../context/AppContext";
 
 const Header = ({ id }) => {
     const [showModal, setShowModal] = useState(false);
+    const { roomState: [roomId, setRoomId], socket } = useContext(AppContext);
 
     const handleClick = () => {
         setShowModal(true);
+    }
+
+    const handleExit = () => {
+        socket.emit("leave-room", roomId)
+        setRoomId('');
     }
 
     return (
@@ -24,12 +31,22 @@ const Header = ({ id }) => {
                             <Navbar.Text>
                                 <h5>{`Your Session Id is : ${id}`}</h5>
                             </Navbar.Text>
-                            <Button variant="outline-primary"
-                                onClick={handleClick}
-                                style={{ marginLeft: '10px' }}
-                            >
-                                Join Room
-                            </Button>
+                            {
+                                roomId ?
+                                    <Button variant="outline-danger"
+                                        onClick={handleExit}
+                                        style={{ marginLeft: '10px' }}
+                                    >
+                                        Exit Room
+                                    </Button>
+                                    :
+                                    <Button variant="outline-primary"
+                                        onClick={handleClick}
+                                        style={{ marginLeft: '10px' }}
+                                    >
+                                        Join Room
+                                    </Button>
+                            }
                         </Nav>
                     </Container>
                 </Navbar>
