@@ -17,14 +17,26 @@ io.on('connection', (socket) => {
     })
 
     socket.on('join-room', (roomId) => {
-        console.log("room id", roomId);
-        try {
-            console.log('[socket]', 'join room :', roomId)
-            socket.join(roomId);
-            socket.to(roomId).emit('user joined', socket.id);
-        } catch (e) {
-            console.log('[error]', 'join room :', e);
-            socket.emit('error', 'couldnt perform requested action');
+        var room = io.sockets.adapter.rooms.get(roomId)
+        console.log("room >>>>>>>> ", room);
+        let arr = [];
+        for (var r in room) {
+            arr.push(r);
+            if (arr.length >= 2) break;
+        }
+        if (arr.length >= 2) {
+            socket.emit("room-full")
+        }
+        else {
+            try {
+
+                console.log('[socket]', 'join room :', roomId)
+                socket.join(roomId);
+                socket.to(roomId).emit('user joined', socket.id);
+            } catch (e) {
+                console.log('[error]', 'join room :', e);
+                socket.emit('error', 'couldnt perform requested action');
+            }
         }
     })
 
