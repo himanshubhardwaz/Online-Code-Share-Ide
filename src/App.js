@@ -1,3 +1,4 @@
+import { faComments } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect, useContext } from 'react'
 import Editor from "./components/Editor"
 import Header from "./components/Header"
@@ -32,6 +33,10 @@ function App() {
           return
       }
     })
+    socket.on('user-left', () => {
+      socket.emit("leave-room", roomId)
+      setRoomId(null);
+    })
   })
 
   useEffect(() => {
@@ -47,6 +52,17 @@ function App() {
     console.log(srcDoc)
     return () => clearTimeout(timeout)
   }, [html, css, javascript])
+
+  // useEffect(() => {
+
+  // }, [])
+
+
+  // const clients = socket.clients('room');
+
+  // useEffect(() => {
+  //   console.log(clients)
+  // }, [clients])
 
   return (
     <>

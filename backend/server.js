@@ -31,8 +31,13 @@ io.on('connection', (socket) => {
     socket.on('leave-room', (roomId) => {
         try {
             console.log('[socket]', 'leave room :', roomId);
-            socket.leave(roomId);
-            socket.to(roomId).emit('user left', socket.id);
+            socket.leave(roomId, function (err) {
+                if (err) throw err;
+                else {
+                    console.log('user left room')
+                }
+            });
+            socket.to(roomId).emit('user-left', socket.id);
         } catch (e) {
             console.log('[error]', 'leave room :', e);
             socket.emit('error', 'couldnt perform requested action');

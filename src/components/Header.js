@@ -13,7 +13,7 @@ const Header = ({ id }) => {
 
     const handleExit = () => {
         socket.emit("leave-room", roomId)
-        setRoomId('');
+        setRoomId(null);
     }
 
     return (
