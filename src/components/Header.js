@@ -2,18 +2,19 @@ import React, { useState, useContext } from 'react';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import JoinRoomModal from "./JoinRoomModal";
 import { AppContext } from "../context/AppContext";
+import WarningModal from './WarningModal';
 
 const Header = ({ id }) => {
     const [showModal, setShowModal] = useState(false);
-    const { roomState: [roomId, setRoomId], socket } = useContext(AppContext);
+    const [showWarningModal, setShowWarningModal] = useState(false)
+    const { roomState: [roomId] } = useContext(AppContext);
 
     const handleClick = () => {
         setShowModal(true);
     }
 
     const handleExit = () => {
-        socket.emit("leave-room", roomId)
-        setRoomId(null);
+        setShowWarningModal(true)
     }
 
     return (
@@ -54,6 +55,10 @@ const Header = ({ id }) => {
             <JoinRoomModal
                 show={showModal}
                 onHide={() => setShowModal(false)}
+            />
+            <WarningModal
+                show={showWarningModal}
+                handleClose={() => setShowWarningModal(false)}
             />
         </>
     )
