@@ -3,7 +3,8 @@
 ## Libraries used: codemirror & react-codemirror2
 ## Created Online code editor that resides on a remote server and is accessible via browsers. This online code editor have basic features like syntax highlighting.
 ##
-![i1](https://user-images.githubusercontent.com/62508572/126872072-20d10874-f145-4501-9815-5b501601535e.png)
+![image](https://user-images.githubusercontent.com/62508572/131895104-21caf362-e4e1-4ae6-ac7a-64cbd7d008de.png)
+
 
 
 
