@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
@@ -12,18 +12,14 @@ import "../index.css"
 
 const Editor = (props) => {
     const [open, setOpen] = useState(true);
+    // eslint-disable-next-line no-unused-vars
     const { roomState: [roomId, setRoomId], socket } = useContext(AppContext);
     const { launguage, label, value, onChange } = props
-    const [userAvailable, setUserAvailable] = useState(false);
 
     const handleChange = (editor, data, value) => {
         onChange(value);
         socket.emit('updateCode', { launguage, value }, roomId)
     }
-
-    // useEffect(() => {
-    //     socket.on('user-left')
-    // }, [])
 
     return (
         <div className={`editor-container ${open ? '' : 'collapsed'}`}>

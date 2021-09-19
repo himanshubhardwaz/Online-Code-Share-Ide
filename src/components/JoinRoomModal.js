@@ -4,6 +4,7 @@ import { Button, Form } from "react-bootstrap"
 import { AppContext } from "../context/AppContext"
 
 const JoinRoomModal = (props) => {
+    // eslint-disable-next-line no-unused-vars
     const { roomState: [roomId, setRoomId], socket } = useContext(AppContext);
     const [id, setId] = useState("");
 
