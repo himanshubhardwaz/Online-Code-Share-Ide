@@ -1,6 +1,38 @@
-const app = require('express')();
+var express = require('express')
+
+var cors = require('cors')
+
+var app = express()
+
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(cors())
+
+app.options('*', cors()) // include before other routes
+
+app.all('/*', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+});
 
 const server = require('http').createServer(app);
+
+const user = require('./data');
+
+const totalUsers = user.getUser();
+
+app.post("/login", (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    console.log(email, password);
+    const foundUser = totalUsers.filter(user => user.email === email && user.password === password);
+    if (foundUser.length > 0) {
+        res.json(foundUser);
+    } else {
+        res.json('Invalid email or password');
+    }
+})
 
 const io = require('socket.io')(server, {
     cors: {
@@ -57,6 +89,6 @@ io.on('connection', (socket) => {
     })
 })
 
-server.listen(5000, () => {
-    console.log("listening on  port 5000...")
+server.listen(8000, () => {
+    console.log("listening on  port 8000...")
 })
