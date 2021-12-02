@@ -13,7 +13,10 @@ function App() {
           <Route exact path="/">
             <LoginScreen />
           </Route>
-          <Route path="/editor">
+          <Route exact path="/editor">
+            <EditorScreen />
+          </Route>
+          <Route path="/editor/:id">
             <EditorScreen />
           </Route>
           <Route path="/dashboard">

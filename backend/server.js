@@ -42,6 +42,23 @@ app.post("/project", (req, res) => {
     res.json({ message: "Project Saved successfully" })
 })
 
+app.put("/project", (req, res) => {
+    const email = req.body.email;
+    const title = req.body.title;
+    const html = req.body.html;
+    const css = req.body.css;
+    const javascript = req.body.javascript;
+    projects.forEach(project => {
+        if (project.title === title && project.email === email) {
+            project.html = html;
+            project.css = css;
+            project.javascript = javascript
+        }
+    })
+    res.send("Project not Found")
+
+})
+
 app.get("/interviews/:email/:role", (req, res) => {
     const email = req.params.email;
     const role = req.params.role;
@@ -63,6 +80,17 @@ app.get("/projects/:email", (req, res) => {
         }
     })
     res.send(personalProjects);
+})
+
+app.get("/project/:email/:title", (req, res) => {
+    const email = req.params.email
+    const title = req.params.title
+    projects.forEach(project => {
+        if (project.title === title && project.email === email) {
+            res.json(project)
+        }
+    })
+    res.send("Not Found")
 })
 
 const io = require('socket.io')(server, {

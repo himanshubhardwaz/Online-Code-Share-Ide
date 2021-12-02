@@ -2,15 +2,32 @@ import React, { useState, useEffect, useContext } from 'react'
 import Editor from "../components/Editor"
 import Header from "../components/Header"
 import { AppContext } from '../context/AppContext';
+import { useParams } from "react-router-dom"
+import axios from "axios"
 
 const EditorScreen = () => {
-    const [html, setHtml] = useState('')
-    const [css, setCss] = useState('')
-    const [javascript, setJavascript] = useState('')
-    const [srcDoc, setSrcDoc] = useState('')
-    const [sessionId, setSessionId] = useState('');
+    const [html, setHtml] = useState("")
+    const [css, setCss] = useState("")
+    const [javascript, setJavascript] = useState("")
+    const [srcDoc, setSrcDoc] = useState("")
+    const [sessionId, setSessionId] = useState("");
     const { roomState: [roomId, setRoomId] } = useContext(AppContext);
     const { socket } = useContext(AppContext);
+
+    const { id } = useParams();
+
+    useEffect(() => {
+        if (id) {
+            const fetchData = async () => {
+                const { data } = await axios.get(`/project/himanshu76200@gmail.com/${id}`)
+                console.log(data)
+                setHtml(data?.html)
+                setCss(data?.css)
+                setJavascript(data?.javascript)
+            }
+            fetchData();
+        }
+    }, [id])
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -48,10 +65,17 @@ const EditorScreen = () => {
         </html>
       `);
         }, 250)
-        console.log(srcDoc)
+        // console.log(srcDoc)
         return () => clearTimeout(timeout)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [html, css, javascript])
+
+    const saveCode = async () => {
+        const { data, error } = await axios.put(`/project`, { email: 'himanshu76200@gmail.com', html, css, javascript, title: id })
+        console.log(data)
+        console.log(error)
+    }
+
 
     return (
         <>
@@ -91,6 +115,12 @@ const EditorScreen = () => {
                     ></iframe>
                 </div>
             </div>
+            <button
+                onClick={saveCode}
+                className="fixed bottom-6 right-6 bg-green-300 rounded-full px-3 py-2"
+            >
+                Save Work
+            </button>
         </>
     )
 }

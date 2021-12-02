@@ -5,12 +5,15 @@ import Modal from "react-bootstrap/Modal"
 import Button from "react-bootstrap/Button"
 import axios from "axios"
 import Form from "react-bootstrap/Form"
+import { Link } from 'react-router-dom'
 
 const ProjectCard = ({ header, body, footer }) => {
     return (
         <div className="px-2 py-2 rounded-2xl bg-gray-100 shadow-lg">
             <div className="w-full grid grid-cols-1 justify-items-end">
-                {header}
+                <Link to={`/editor/${body}`}>
+                    {header}
+                </Link>
             </div>
             <p className="my-2 text-center text-2xl text-gray-500 font-semibold">{body}</p>
             <p className="my-2 text-center text-gray-400 text-base">{footer}</p>
