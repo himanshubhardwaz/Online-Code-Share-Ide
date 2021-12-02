@@ -13,8 +13,76 @@ const users = [
     }
 ]
 
+const interviews = [
+    {
+        interviewee: 'himanshu76200@gmail.com',
+        role: 'frontend-intern',
+        cardData: {
+            total: {
+                number: 3,
+                liked: 2
+            },
+            recommended: {
+                number: 1,
+                score: 27
+            },
+            rejected: {
+                number: 2,
+                score: 16
+            }
+        },
+        interviews: [
+            {
+                name: 'Himanshu Bhardwaz',
+                title: 'Frontend intern',
+                department: 'Optimization',
+                role: 'Admin',
+                email: 'himanshu76200@gmail.com',
+                result: 'selected',
+                score: '28',
+                strengths: ['React', 'Node', 'Redux'],
+                weaknesses: ['CSS', 'JavaScript Basics']
+            },
+            {
+                name: 'Himanshu Bhardwaz',
+                title: 'Frontend intern',
+                department: 'Optimization',
+                role: 'Admin',
+                email: 'himanshu76200@gmail.com',
+                result: 'rejected',
+                score: '22',
+                strengths: ['State management', 'Caching'],
+                weaknesses: ['communication skill']
+            },
+            {
+                name: 'Himanshu Bhardwaz',
+                title: 'Frontend intern',
+                department: 'Optimization',
+                role: 'Admin',
+                email: 'himanshu76200@gmail.com',
+                score: '12',
+                result: 'rejected',
+                strengths: ['Problem solving', 'JavaScript'],
+                weaknesses: ['unsureness']
+            },
+        ]
+    }
+]
+
+const projects = []
+
 function getUser() {
     return users;
 }
 
+function getProjects() {
+    return projects;
+}
+
+function getInterviews() {
+    return interviews;
+}
+
 module.exports.getUser = getUser;
+module.exports.getProjects = getProjects;
+module.exports.getInterviews = getInterviews;

@@ -10,17 +10,13 @@ app.use(cors())
 
 app.options('*', cors()) // include before other routes
 
-app.all('/*', function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    next();
-});
-
 const server = require('http').createServer(app);
 
 const user = require('./data');
 
 const totalUsers = user.getUser();
+const projects = user.getProjects();
+const interviews = user.getInterviews();
 
 app.post("/login", (req, res) => {
     const email = req.body.email;
@@ -28,10 +24,45 @@ app.post("/login", (req, res) => {
     console.log(email, password);
     const foundUser = totalUsers.filter(user => user.email === email && user.password === password);
     if (foundUser.length > 0) {
-        res.json(foundUser);
+        res.status(200).json(foundUser);
     } else {
-        res.json('Invalid email or password');
+        res.status(401).json({ message: "Invalid username or password" })
     }
+})
+
+app.post("/project", (req, res) => {
+    const email = req.body.email;
+    const title = req.body.title;
+    const date = new Date();
+    const createdAt = date.getDate() + " December 2021";
+    if (!email || !title) {
+        res.json({ message: "Email && Title are required" })
+    }
+    projects.push({ email, createdAt, title });
+    res.json({ message: "Project Saved successfully" })
+})
+
+app.get("/interviews/:email/:role", (req, res) => {
+    const email = req.params.email;
+    const role = req.params.role;
+    console.log(email, role, "email role");
+    interviews.forEach(interview => {
+        if (interview.interviewee === email && interview.role === role) {
+            res.send(interview);
+        }
+    })
+    res.json({ message: "No data found" })
+})
+
+app.get("/projects/:email", (req, res) => {
+    const email = req.params.email;
+    const personalProjects = [];
+    projects.forEach(project => {
+        if (project.email === email) {
+            personalProjects.push(project)
+        }
+    })
+    res.send(personalProjects);
 })
 
 const io = require('socket.io')(server, {
@@ -61,7 +92,6 @@ io.on('connection', (socket) => {
         }
         else {
             try {
-
                 console.log('[socket]', 'join room :', roomId)
                 socket.join(roomId);
                 socket.to(roomId).emit('user joined', socket.id);

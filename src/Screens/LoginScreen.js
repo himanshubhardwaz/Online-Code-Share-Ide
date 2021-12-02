@@ -1,10 +1,14 @@
 import { useState } from 'react'
+import axios from "axios"
+import { useHistory } from 'react-router-dom'
 
 const LoginScreen = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     })
+
+    const history = useHistory();
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -14,16 +18,15 @@ const LoginScreen = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const rawResponse = await fetch('http://localhost:8000/login', {
-            method: 'POST',
+        const config = {
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ formData })
-        });
-        const content = await rawResponse.json();
-        console.log(content);
+            }
+        }
+        const { data } = await axios.post("/login", { email: formData.email, password: formData.password }, config);
+        if (data) {
+            history.push("/dashboard")
+        }
     }
 
     return (
