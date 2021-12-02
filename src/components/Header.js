@@ -3,8 +3,9 @@ import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import JoinRoomModal from "./JoinRoomModal";
 import { AppContext } from "../context/AppContext";
 import WarningModal from './WarningModal';
+import { FiMicOff, FiMic } from "react-icons/fi"
 
-const Header = ({ id }) => {
+const Header = ({ id, mic, isMuted, setIsMuted }) => {
     const [showModal, setShowModal] = useState(false);
     const [showWarningModal, setShowWarningModal] = useState(false)
     const { roomState: [roomId] } = useContext(AppContext);
@@ -30,7 +31,7 @@ const Header = ({ id }) => {
                         </Navbar.Brand>
                         <Nav>
                             <Navbar.Text>
-                                <h5>{`Your Session Id is : ${id}`}</h5>
+                                {id ? <h5>{`Your Session Id is : ${id}`}</h5> : null}
                             </Navbar.Text>
                             {
                                 roomId ?
@@ -48,6 +49,21 @@ const Header = ({ id }) => {
                                         Join Room
                                     </Button>
                             }
+                            {mic ? <>
+                                {
+                                    isMuted ?
+                                        <FiMicOff
+                                            size="42"
+                                            className="ml-8 rounded-full bg-red-500 text-white p-2.5 cursor-pointer"
+                                            onClick={() => setIsMuted(false)}
+                                        /> :
+                                        <FiMic
+                                            size="42"
+                                            className="ml-8 rounded-full bg-blue-500 text-white p-2.5  cursor-pointer"
+                                            onClick={() => setIsMuted(true)}
+                                        />
+                                }
+                            </> : null}
                         </Nav>
                     </Container>
                 </Navbar>

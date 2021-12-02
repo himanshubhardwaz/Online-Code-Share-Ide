@@ -99,7 +99,7 @@ const Dashboard = () => {
                                             />
                                             <button
                                                 onClick={scheduleInterview}
-                                                className="rounded-full px-4 py-2.5 bg-black text-white font-semibold"
+                                                className="rounded-full px-4 py-2.5 bg-black hover:bg-gray-700 text-white font-semibold"
                                             >
                                                 Send Invitation
                                             </button>
@@ -141,7 +141,7 @@ const Dashboard = () => {
                                             />
                                             <button
                                                 onClick={scheduleInterview}
-                                                className="rounded-full px-4 py-2.5 bg-black text-white font-semibold"
+                                                className="rounded-full px-4 py-2.5 bg-black hover:bg-gray-700 text-white font-semibold"
                                             >
                                                 Send Invitation
                                             </button>

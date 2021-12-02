@@ -2,32 +2,44 @@ import React, { useState, useEffect, useContext } from 'react'
 import Editor from "../components/Editor"
 import Header from "../components/Header"
 import { AppContext } from '../context/AppContext';
-import { useParams } from "react-router-dom"
-import axios from "axios"
+import { useParams, useLocation } from "react-router-dom"
+import useMicrophone from "../hooks/useMicrophone";
 
-const EditorScreen = () => {
+const InterviewRoom = () => {
     const [html, setHtml] = useState("")
     const [css, setCss] = useState("")
     const [javascript, setJavascript] = useState("")
     const [srcDoc, setSrcDoc] = useState("")
     const [sessionId, setSessionId] = useState("");
+    const { id } = useParams();
     const { roomState: [roomId, setRoomId] } = useContext(AppContext);
     const { socket } = useContext(AppContext);
+    const [isMuted, setIsMuted] = useState(true);
+    const location = useLocation();
+    const isInterviewer = location.state?.isInterviewer;
 
-    const { id } = useParams();
+    console.log("is Interviewer", isInterviewer)
+
+    const { allowPermission, havePermission, revokePermission } = useMicrophone();
+
+    useEffect(() => {
+        if (isMuted) {
+            if (havePermission) {
+                revokePermission();
+            }
+        } else {
+            if (!havePermission) {
+                allowPermission();
+            }
+        }
+    }, [isMuted])
 
     useEffect(() => {
         if (id) {
-            const fetchData = async () => {
-                const { data } = await axios.get(`/project/himanshu76200@gmail.com/${id}`)
-                console.log(data)
-                setHtml(data?.html)
-                setCss(data?.css)
-                setJavascript(data?.javascript)
-            }
-            fetchData();
+            socket.emit("join-room", id);
+            setRoomId(id)
         }
-    }, [id])
+    }, [id, setRoomId, socket])
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -70,16 +82,10 @@ const EditorScreen = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [html, css, javascript])
 
-    const saveCode = async () => {
-        const { data, error } = await axios.put(`/project`, { email: 'himanshu76200@gmail.com', html, css, javascript, title: id })
-        console.log(data)
-        console.log(error)
-    }
-
 
     return (
         <>
-            <Header id={sessionId} />
+            <Header mic={roomId ? true : false} isMuted={isMuted} setIsMuted={setIsMuted} />
             <div className="app">
                 <div className="pane top-pane">
                     <Editor
@@ -115,18 +121,8 @@ const EditorScreen = () => {
                     ></iframe>
                 </div>
             </div>
-            {
-                id ?
-                    <button
-                        onClick={saveCode}
-                        className="fixed bottom-6 right-6 bg-green-300 rounded-full px-3 py-2"
-                    >
-                        Save Work
-                    </button> : null
-            }
-
         </>
     )
 }
 
-export default EditorScreen
+export default InterviewRoom

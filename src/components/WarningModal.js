@@ -2,13 +2,17 @@ import React, { useContext } from 'react'
 import { AppContext } from "../context/AppContext";
 import Modal from "react-bootstrap/Modal"
 import Button from "react-bootstrap/Button"
+import { useHistory } from 'react-router-dom';
 
 const WarningModal = ({ show, handleClose }) => {
     const { roomState: [roomId, setRoomId], socket } = useContext(AppContext);
+    const history = useHistory();
+
     const handleExit = () => {
         socket.emit("leave-room", roomId)
         setRoomId(null);
         handleClose();
+        history.push("/editor")
     }
 
     return (
