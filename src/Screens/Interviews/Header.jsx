@@ -5,8 +5,8 @@ import Avatar from "../../components/Avatar"
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', current: false },
-    { name: 'Scheduled Interviews', href: '/interviews', current: false },
-    { name: 'Projects', href: '/projects', current: true },
+    { name: 'Scheduled Interviews', href: '/interviews', current: true },
+    { name: 'Projects', href: '/projects', current: false },
     // { name: 'Calendar', href: '#', current: false },
 ]
 

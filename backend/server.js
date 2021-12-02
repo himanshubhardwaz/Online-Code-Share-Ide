@@ -17,6 +17,7 @@ const user = require('./data');
 const totalUsers = user.getUser();
 const projects = user.getProjects();
 const interviews = user.getInterviews();
+const scheduledInterviews = user.getScheduledInterviews();
 
 app.post("/login", (req, res) => {
     const email = req.body.email;
@@ -91,6 +92,33 @@ app.get("/project/:email/:title", (req, res) => {
         }
     })
     res.send("Not Found")
+})
+
+app.get("/scheduledInterviews/:email", (req, res) => {
+    const email = req.params.email;
+    scheduledInterviews.forEach(interviews => {
+        if (interviews.email === email) {
+            res.send(interviews)
+        }
+    })
+    res.send("No Scheduled Interviews");
+})
+
+app.post("/schedule-interview", (req, res) => {
+    const email = req.body.email;
+    const candidateEmail = req.body.candidateEmail;
+    const datetime = req.body.datetime;
+    console.log({ email: email, candidateEmail: candidateEmail, datetime })
+    scheduledInterviews.forEach(interviews => {
+        if (interviews.email === email) {
+            interviews.allInterviews.push({ candidateEmail, datetime });
+            console.log("si >>>> ", scheduledInterviews)
+            res.send("Invitation Send && Meeting Scheduled")
+        }
+    })
+    scheduledInterviews.push({ email, allInterviews: [{ candidateEmail, datetime }] });
+    console.log("si >>>> ", scheduledInterviews)
+    res.send("Invitation Send && Meeting Scheduled")
 })
 
 const io = require('socket.io')(server, {

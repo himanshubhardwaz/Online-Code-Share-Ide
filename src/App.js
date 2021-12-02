@@ -4,6 +4,7 @@ import EditorScreen from "./Screens/EditorScreen"
 import LoginScreen from "./Screens/LoginScreen"
 import DashboardScreen from "./Screens/Dashboard/index"
 import ProjectScreen from './Screens/Projects';
+import InterviewScreen from "./Screens/Interviews"
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
           </Route>
           <Route path="/projects">
             <ProjectScreen />
+          </Route>
+          <Route path="/interviews">
+            <InterviewScreen />
           </Route>
         </Switch>
       </Router>

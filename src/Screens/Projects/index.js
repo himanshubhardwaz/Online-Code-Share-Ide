@@ -96,7 +96,7 @@ const ProjectScreen = () => {
     return (
         <>
             <Header />
-            <div className="mx-8 my-8 grid grid-cols-4 gap-12">
+            <div className="mx-8 my-4 grid grid-cols-4 gap-12">
                 <div
                     onClick={() => setModalShow(true)}
                     className="px-2 py-2 rounded-2xl bg-gray-100 shadow-lg flex flex-col items-center justify-center cursor-pointer h-32"

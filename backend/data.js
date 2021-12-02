@@ -69,6 +69,8 @@ const interviews = [
     }
 ]
 
+const scheduledInterviews = [];
+
 const projects = []
 
 function getUser() {
@@ -83,6 +85,11 @@ function getInterviews() {
     return interviews;
 }
 
+function getScheduledInterviews() {
+    return scheduledInterviews;
+}
+
 module.exports.getUser = getUser;
 module.exports.getProjects = getProjects;
 module.exports.getInterviews = getInterviews;
+module.exports.getScheduledInterviews = getScheduledInterviews;

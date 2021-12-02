@@ -16,6 +16,8 @@ const Card = ({ header, body, footer }) => {
 const Dashboard = () => {
     const [data, setData] = React.useState();
     const [role, setRole] = React.useState("frontend-intern");
+    const [candidateEmail, setCandidateEmail] = React.useState("");
+    const [datetime, setDatetime] = React.useState("");
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -35,12 +37,30 @@ const Dashboard = () => {
         setRole(event.target.value);
     }
 
+    const scheduleInterview = async () => {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        console.log({ email: 'himanshu76200@gmail.com', candidateEmail, datetime })
+        const { data } = await axios.post("/schedule-interview", { email: 'himanshu76200@gmail.com', candidateEmail: candidateEmail, datetime: datetime }, config)
+        console.log("data from scheduleInterview", data);
+    }
+
+    const handleCandidateEmailChange = (event) => {
+        setCandidateEmail(event.target.value)
+    }
+
+    const handleDatetimeChange = (event) => {
+        setDatetime(event.target.value)
+    }
+
     return (
         <>
             <Header />
             {
                 data ?
-
                     <>
                         <div className="w-full">
                             <div className="grid grid-cols-1 justify-items-end my-2 mx-2">
@@ -56,12 +76,35 @@ const Dashboard = () => {
                                     </select>
                                 </div>
                             </div>
-
                             {
                                 data?.message === "No data found" ?
-                                    <p className="text-2xl font-semibold">
-                                        Sorry no data available for this role
-                                    </p> :
+                                    <>
+                                        <p className="text-2xl font-semibold mx-8 my-8">
+                                            Sorry no data available for this role
+                                        </p>
+                                        <div className="mx-8 mt-4 w-3/5 flex items-center">
+                                            <input
+                                                value={candidateEmail}
+                                                type="email"
+                                                className="w-1/3 mr-2"
+                                                placeholder="Email of the candidate"
+                                                onChange={handleCandidateEmailChange}
+                                            />
+                                            <input
+                                                value={datetime}
+                                                type="time"
+                                                className="w-1/3 mr-2"
+                                                placeholder="Time of the interview"
+                                                onChange={handleDatetimeChange}
+                                            />
+                                            <button
+                                                onClick={scheduleInterview}
+                                                className="rounded-full px-4 py-2.5 bg-black text-white font-semibold"
+                                            >
+                                                Send Invitation
+                                            </button>
+                                        </div>
+                                    </> :
                                     <>
                                         <div className="grid grid-cols-3 w-4/5 gap-8 mt-2 mx-8">
                                             <Card
@@ -81,7 +124,30 @@ const Dashboard = () => {
                                             />
                                         </div>
 
-                                        <div className="mx-8 my-8">
+                                        <div className="mx-8 mt-4 w-3/5 flex items-center">
+                                            <input
+                                                value={candidateEmail}
+                                                type="email"
+                                                className="w-1/3 mr-2"
+                                                placeholder="Email of the candidate"
+                                                onChange={handleCandidateEmailChange}
+                                            />
+                                            <input
+                                                value={datetime}
+                                                type="time"
+                                                className="w-1/3 mr-2"
+                                                placeholder="Time of the interview"
+                                                onChange={handleDatetimeChange}
+                                            />
+                                            <button
+                                                onClick={scheduleInterview}
+                                                className="rounded-full px-4 py-2.5 bg-black text-white font-semibold"
+                                            >
+                                                Send Invitation
+                                            </button>
+                                        </div>
+
+                                        <div className="mx-8">
                                             <p className="text-xl text-gray-500 my-2">All Interviews: </p>
                                             <Table data={data} />
                                         </div>
