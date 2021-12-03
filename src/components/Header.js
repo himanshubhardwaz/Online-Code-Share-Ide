@@ -6,7 +6,7 @@ import WarningModal from './WarningModal';
 import { FiMicOff, FiMic } from "react-icons/fi"
 import { QuestionMarkCircleIcon, AcademicCapIcon } from "@heroicons/react/outline"
 import Modal from "react-bootstrap/Modal"
-import { useLocation, useParams } from "react-router-dom"
+import { useLocation, useParams, useHistory } from "react-router-dom"
 import axios from "axios"
 
 const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
@@ -20,6 +20,8 @@ const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
     const [isNormalEditorScreen, setIsNormalEditorScreen] = useState(false);
     const location = useLocation();
     const { id: invitedEmail } = useParams();
+    const history = useHistory();
+
     const [marks, setMarks] = useState({
         name: 'Himanshu Bhardwaz',
         role: 'frontend-intern',
@@ -76,7 +78,9 @@ const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
             strengths: marks.strengths,
             weaknesses: marks.weaknesses
         }, config);
-        console.log(data);
+        if (data) {
+            setShowMarkingModal(false);
+        }
     }
 
     useEffect(() => {
@@ -95,7 +99,7 @@ const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
                         <Navbar.Brand href="">
                             <div className="brand-container">
                                 <img className="logo" src="coding.png" alt="" />
-                                <h3>Code Online</h3>
+                                <h3 className="cursor-pointer" onClick={() => history.push("/dashboard")}>Code Online</h3>
                             </div>
                         </Navbar.Brand>
                         <Nav>
