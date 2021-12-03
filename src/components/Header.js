@@ -1,14 +1,19 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import JoinRoomModal from "./JoinRoomModal";
 import { AppContext } from "../context/AppContext";
 import WarningModal from './WarningModal';
 import { FiMicOff, FiMic } from "react-icons/fi"
+import { QuestionMarkCircleIcon } from "@heroicons/react/outline"
+import Modal from "react-bootstrap/Modal"
 
-const Header = ({ id, mic, isMuted, setIsMuted }) => {
+const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
     const [showModal, setShowModal] = useState(false);
     const [showWarningModal, setShowWarningModal] = useState(false)
-    const { roomState: [roomId] } = useContext(AppContext);
+    const [showQuestionModal, setShowQuestionModal] = useState(false)
+    const [question, setQuestion] = useState("");
+    const [addedQuestion, setAddedQuestion] = useState("")
+    const { roomState: [roomId], socket } = useContext(AppContext);
 
     const handleClick = () => {
         setShowModal(true);
@@ -17,6 +22,23 @@ const Header = ({ id, mic, isMuted, setIsMuted }) => {
     const handleExit = () => {
         setShowWarningModal(true)
     }
+
+    const handleCloseQuestionModal = () => {
+        setShowQuestionModal(false);
+    }
+
+    const addQuestion = () => {
+        socket.emit('add-question', { question }, roomId)
+        setShowQuestionModal(false);
+    }
+
+    useEffect(() => {
+        if (!isInterviewer) {
+            socket.on('add-question', ({ question: addedQuestion }) => {
+                setAddedQuestion(addedQuestion)
+            })
+        }
+    }, [isInterviewer, socket])
 
     return (
         <>
@@ -49,6 +71,24 @@ const Header = ({ id, mic, isMuted, setIsMuted }) => {
                                         Join Room
                                     </Button>
                             }
+                            {
+                                isInterviewer ?
+                                    <div className="flex items-center justify-center ml-8">
+                                        <QuestionMarkCircleIcon
+                                            className="h-10 text-white hover:text-yellow-700 cursor-pointer"
+                                            onClick={() => setShowQuestionModal(true)}
+                                        />
+                                    </div> : null
+                            }
+                            {
+                                !isInterviewer ?
+                                    <div className="flex items-center justify-center ml-8">
+                                        <QuestionMarkCircleIcon
+                                            className="h-10 text-white hover:text-yellow-700 cursor-pointer"
+                                            onClick={() => setShowQuestionModal(true)}
+                                        />
+                                    </div> : null
+                            }
                             {mic ? <>
                                 {
                                     isMuted ?
@@ -64,6 +104,7 @@ const Header = ({ id, mic, isMuted, setIsMuted }) => {
                                         />
                                 }
                             </> : null}
+
                         </Nav>
                     </Container>
                 </Navbar>
@@ -76,6 +117,51 @@ const Header = ({ id, mic, isMuted, setIsMuted }) => {
                 show={showWarningModal}
                 handleClose={() => setShowWarningModal(false)}
             />
+            <>
+                <Modal show={showQuestionModal} onHide={handleCloseQuestionModal}>
+                    {isInterviewer ?
+                        <>
+                            <Modal.Header>
+                                <Modal.Title>Enter Question for the candidate</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <textarea
+                                    className="form-textarea w-full"
+                                    value={question}
+                                    onChange={e => setQuestion(e.target.value)}
+                                />
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleCloseQuestionModal}>
+                                    Close Window
+                                </Button>
+                                <Button variant="danger" onClick={addQuestion}>
+                                    Add Question
+                                </Button>
+                            </Modal.Footer>
+                        </> :
+                        <>
+                            {addedQuestion ? <>
+                                <Modal.Header>
+                                    <Modal.Title>Please solve the question below</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <p className="text-lg">{addedQuestion}</p>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={handleCloseQuestionModal}>
+                                        Close Window
+                                    </Button>
+                                </Modal.Footer>
+                            </> :
+                                <Modal.Header>
+                                    <Modal.Title>No Question added yet</Modal.Title>
+                                </Modal.Header>}
+                        </>
+                    }
+
+                </Modal>
+            </>
         </>
     )
 }

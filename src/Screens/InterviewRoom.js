@@ -85,7 +85,7 @@ const InterviewRoom = () => {
 
     return (
         <>
-            <Header mic={roomId ? true : false} isMuted={isMuted} setIsMuted={setIsMuted} />
+            <Header mic={roomId ? true : false} isMuted={isMuted} setIsMuted={setIsMuted} isInterviewer={isInterviewer} />
             <div className="app">
                 <div className="pane top-pane">
                     <Editor

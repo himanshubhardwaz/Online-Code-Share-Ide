@@ -59,6 +59,13 @@ const LoginScreen = () => {
                                 >
                                     Sign up
                                 </span>
+                                <br />
+                                <span
+                                    onClick={() => { history.push("/editor") }}
+                                    className="hover:text-blue-600 cursor-pointer"
+                                >
+                                    Guest Login
+                                </span>
                             </p>
                             <div className="flex flex-col  items-center justify-center">
                                 <input

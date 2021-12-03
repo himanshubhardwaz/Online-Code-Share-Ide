@@ -135,6 +135,10 @@ io.on('connection', (socket) => {
         socket.to(roomId).emit('updateCode', payload);
     })
 
+    socket.on('add-question', (payload, roomId) => {
+        socket.to(roomId).emit('add-question', payload);
+    })
+
     socket.on('join-room', (roomId) => {
         var room = io.sockets.adapter.rooms.get(roomId)
         console.log("room >>>>>>>> ", room);
