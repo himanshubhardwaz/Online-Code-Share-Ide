@@ -6,6 +6,7 @@ import WarningModal from './WarningModal';
 import { FiMicOff, FiMic } from "react-icons/fi"
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline"
 import Modal from "react-bootstrap/Modal"
+import { useLocation } from "react-router-dom"
 
 const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
     const [showModal, setShowModal] = useState(false);
@@ -14,6 +15,15 @@ const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
     const [question, setQuestion] = useState("");
     const [addedQuestion, setAddedQuestion] = useState("")
     const { roomState: [roomId], socket } = useContext(AppContext);
+    const [isNormalEditorScreen, setIsNormalEditorScreen] = useState(false);
+    const location = useLocation();
+
+    useEffect(() => {
+        // console.log("pathname", location.pathname);
+        if (location.pathname === "/editor") {
+            setIsNormalEditorScreen(true)
+        }
+    }, [location])
 
     const handleClick = () => {
         setShowModal(true);
@@ -33,12 +43,12 @@ const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
     }
 
     useEffect(() => {
-        if (!isInterviewer) {
+        if (!isInterviewer && !isNormalEditorScreen) {
             socket.on('add-question', ({ question: addedQuestion }) => {
                 setAddedQuestion(addedQuestion)
             })
         }
-    }, [isInterviewer, socket])
+    }, [isInterviewer, isNormalEditorScreen, socket])
 
     return (
         <>
@@ -81,7 +91,7 @@ const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
                                     </div> : null
                             }
                             {
-                                !isInterviewer ?
+                                !isInterviewer && !isNormalEditorScreen ?
                                     <div className="flex items-center justify-center ml-8">
                                         <QuestionMarkCircleIcon
                                             className="h-10 text-white hover:text-yellow-700 cursor-pointer"
@@ -140,27 +150,29 @@ const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
                                 </Button>
                             </Modal.Footer>
                         </> :
-                        <>
-                            {addedQuestion ? <>
-                                <Modal.Header>
-                                    <Modal.Title>Please solve the question below</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <p className="text-lg">{addedQuestion}</p>
-                                </Modal.Body>
-                                <Modal.Footer>
-                                    <Button variant="secondary" onClick={handleCloseQuestionModal}>
-                                        Close Window
-                                    </Button>
-                                </Modal.Footer>
-                            </> :
-                                <Modal.Header>
-                                    <Modal.Title>No Question added yet</Modal.Title>
-                                </Modal.Header>}
-                        </>
+                        !isNormalEditorScreen && !isInterviewer ?
+                            <>
+                                {
+                                    addedQuestion ? <>
+                                        <Modal.Header>
+                                            <Modal.Title>Please solve the question below</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <p className="text-lg">{addedQuestion}</p>
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" onClick={handleCloseQuestionModal}>
+                                                Close Window
+                                            </Button>
+                                        </Modal.Footer>
+                                    </> :
+                                        <Modal.Header>
+                                            <Modal.Title>No Question added yet</Modal.Title>
+                                        </Modal.Header>
+                                }
+                            </> : null
                     }
-
-                </Modal>
+                </Modal >
             </>
         </>
     )
