@@ -1,40 +1,5 @@
 import Avatar from "./../../components/Avatar"
 
-// const people = [
-//     {
-//         name: 'Himanshu Bhardwaz',
-//         title: 'Frontend intern',
-//         department: 'Optimization',
-//         role: 'Admin',
-//         email: 'himanshu76200@gmail.com',
-//         result: 'selected',
-//         strengths: ['React', 'Node', 'Redux'],
-//         weaknesses: ['CSS', 'JavaScript Basics']
-//     },
-//     {
-//         name: 'Himanshu Bhardwaz',
-//         title: 'Frontend intern',
-//         department: 'Optimization',
-//         role: 'Admin',
-//         email: 'himanshu76200@gmail.com',
-//         result: 'selected',
-//         strengths: ['React', 'Node', 'Redux'],
-//         weaknesses: ['CSS', 'JavaScript Basics']
-//     },
-//     {
-//         name: 'Himanshu Bhardwaz',
-//         title: 'Frontend intern',
-//         department: 'Optimization',
-//         role: 'Admin',
-//         email: 'himanshu76200@gmail.com',
-//         result: 'selected',
-//         strengths: ['React', 'Node', 'Redux'],
-//         weaknesses: ['CSS', 'JavaScript Basics']
-//     },
-
-//     // More people...
-// ]
-
 export default function Example({ data }) {
 
     return (

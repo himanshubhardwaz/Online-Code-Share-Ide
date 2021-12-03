@@ -72,6 +72,55 @@ app.get("/interviews/:email/:role", (req, res) => {
     res.json({ message: "No data found" })
 })
 
+app.post("/interview", (req, res) => {
+    const {
+        name,
+        role,
+        interviewee,
+        email,
+        result,
+        score,
+        strengths,
+        weaknesses,
+    } = req.body;
+    console.log({
+        name,
+        role,
+        interviewee,
+        email,
+        result,
+        score,
+        strengths,
+        weaknesses,
+    })
+    interviews.forEach(interview => {
+        if (interview.interviewee === email && interview.role === role) {
+            interview.interviews.push({
+                name,
+                role,
+                interviewee,
+                email,
+                result,
+                score,
+                strengths,
+                weaknesses,
+            });
+            interview.cardData.total.number = parseInt([interview.cardData.total.number]) + 1;
+            interview.cardData.total.liked = parseInt([interview.cardData.total.liked]) + 1;
+            if (result === "selected") {
+                const avgScore = (parseInt([interview.cardData.rejected.score]) * parseInt([interview.cardData.recommended.number]) + parseInt(score)) / (parseInt([interview.cardData.recommended.number]) + 1);
+                interview.cardData.recommended.number = parseInt([interview.cardData.recommended.number]) + 1;
+                interview.cardData.recommended.score = parseInt(avgScore);
+            } else {
+                const avgScore = (parseInt([interview.cardData.rejected.score]) * parseInt([interview.cardData.rejected.number]) + parseInt(score)) / (parseInt([interview.cardData.rejected.number]) + 1);
+                interview.cardData.rejected.number = parseInt([interview.cardData.rejected.number]) + 1;
+                interview.cardData.rejected.score = parseInt(avgScore);
+            }
+            res.send("Save Successfully")
+        }
+    })
+})
+
 app.get("/projects/:email", (req, res) => {
     const email = req.params.email;
     const personalProjects = [];

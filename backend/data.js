@@ -19,47 +19,36 @@ const interviews = [
         role: 'frontend-intern',
         cardData: {
             total: {
-                number: 3,
-                liked: 2
+                number: 2,
+                liked: 1
             },
             recommended: {
                 number: 1,
                 score: 27
             },
             rejected: {
-                number: 2,
-                score: 16
+                number: 1,
+                score: 12
             }
         },
         interviews: [
             {
-                name: 'Himanshu Bhardwaz',
+                name: 'Akash Mohan',
                 title: 'Frontend intern',
                 department: 'Optimization',
                 role: 'Admin',
-                email: 'himanshu76200@gmail.com',
+                email: 'akash@gmail.com',
                 result: 'selected',
-                score: '28',
+                score: '27',
                 strengths: ['React', 'Node', 'Redux'],
                 weaknesses: ['CSS', 'JavaScript Basics']
             },
             {
-                name: 'Himanshu Bhardwaz',
+                name: 'Virat Kohli',
                 title: 'Frontend intern',
                 department: 'Optimization',
                 role: 'Admin',
-                email: 'himanshu76200@gmail.com',
-                result: 'rejected',
-                score: '22',
-                strengths: ['State management', 'Caching'],
-                weaknesses: ['communication skill']
-            },
-            {
-                name: 'Himanshu Bhardwaz',
-                title: 'Frontend intern',
-                department: 'Optimization',
-                role: 'Admin',
-                email: 'himanshu76200@gmail.com',
+                email: 'virat@gmail.com',
                 score: '12',
                 result: 'rejected',
                 strengths: ['Problem solving', 'JavaScript'],

@@ -120,7 +120,7 @@ const Dashboard = () => {
                                             <Card
                                                 header="Total Candidates Rejected"
                                                 body={<p className="text-red-500 font-semibold">{data?.cardData?.rejected.number}</p>}
-                                                footer={<>Average Score of rejected candidates was {" "}<span className="font-semibold text-lg">13</span></>}
+                                                footer={<>Average Score of rejected candidates was {" "}<span className="font-semibold text-lg">{data?.cardData.rejected.score}</span></>}
                                             />
                                         </div>
 

@@ -28,7 +28,7 @@ const JoinRoomModal = (props) => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        Enter Room Id provided by the collaborator/ Interviewer
+                        Enter Room Id you want to join
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>

@@ -4,19 +4,32 @@ import JoinRoomModal from "./JoinRoomModal";
 import { AppContext } from "../context/AppContext";
 import WarningModal from './WarningModal';
 import { FiMicOff, FiMic } from "react-icons/fi"
-import { QuestionMarkCircleIcon } from "@heroicons/react/outline"
+import { QuestionMarkCircleIcon, AcademicCapIcon } from "@heroicons/react/outline"
 import Modal from "react-bootstrap/Modal"
-import { useLocation } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
+import axios from "axios"
 
 const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
     const [showModal, setShowModal] = useState(false);
     const [showWarningModal, setShowWarningModal] = useState(false)
     const [showQuestionModal, setShowQuestionModal] = useState(false)
+    const [showMarkingModal, setShowMarkingModal] = useState(false)
     const [question, setQuestion] = useState("");
     const [addedQuestion, setAddedQuestion] = useState("")
     const { roomState: [roomId], socket } = useContext(AppContext);
     const [isNormalEditorScreen, setIsNormalEditorScreen] = useState(false);
     const location = useLocation();
+    const { id: invitedEmail } = useParams();
+    const [marks, setMarks] = useState({
+        name: 'Himanshu Bhardwaz',
+        role: 'frontend-intern',
+        interviewee: 'himanshu76200@gmail.com',
+        email: invitedEmail,
+        result: '',
+        score: '28',
+        strengths: [],
+        weaknesses: []
+    })
 
     useEffect(() => {
         // console.log("pathname", location.pathname);
@@ -37,9 +50,33 @@ const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
         setShowQuestionModal(false);
     }
 
+    const handleCloseMarkingModal = () => {
+        setShowMarkingModal(false);
+    }
+
     const addQuestion = () => {
         socket.emit('add-question', { question }, roomId)
         setShowQuestionModal(false);
+    }
+
+    const handleSubmitMarks = async () => {
+        console.log("marks >>>>>>> ", marks)
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        const { data } = await axios.post("/interview", {
+            name: marks.name,
+            role: marks.role,
+            interviewee: marks.interviewee,
+            email: marks.email,
+            result: marks.result,
+            score: marks.score,
+            strengths: marks.strengths,
+            weaknesses: marks.weaknesses
+        }, config);
+        console.log(data);
     }
 
     useEffect(() => {
@@ -80,6 +117,15 @@ const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
                                     >
                                         Join Room
                                     </Button>
+                            }
+                            {
+                                isInterviewer ?
+                                    <div className="flex items-center justify-center ml-8">
+                                        <AcademicCapIcon
+                                            className="h-10 text-white hover:text-yellow-700 cursor-pointer"
+                                            onClick={() => setShowMarkingModal(true)}
+                                        />
+                                    </div> : null
                             }
                             {
                                 isInterviewer ?
@@ -173,6 +219,54 @@ const Header = ({ id, mic, isMuted, setIsMuted, isInterviewer }) => {
                             </> : null
                     }
                 </Modal >
+
+                {
+                    isInterviewer ?
+                        <>
+                            <Modal
+                                show={showMarkingModal}
+                                onHide={handleCloseMarkingModal}
+                                size="md"
+                                aria-labelledby="contained-modal-title-vcenter"
+                                centered
+                            >
+                                <Modal.Header closeButton>
+                                    <Modal.Title id="contained-modal-title-vcenter">
+                                        Mark Candidate on the basis of their performance
+                                    </Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <input
+                                        className="w-full py-2 px-3" placeholder="Marks out of 30"
+                                        value={marks.score}
+                                        onChange={e => setMarks(prevMarks => ({ ...prevMarks, score: e.target.value }))}
+                                    />
+                                    <input
+                                        className="mt-2 w-full py-2 px-3" placeholder="Strengths of candidate"
+                                        onChange={e => setMarks(prevMarks => ({ ...prevMarks, strengths: [...(e.target.value).split(',')] }))}
+                                        value={marks.strengths.toString()}
+                                    />
+
+                                    <input
+                                        className="mt-2 w-full py-2 px-3" placeholder="Weakness of candidate"
+                                        onChange={e => setMarks(prevMarks => ({ ...prevMarks, weaknesses: [...(e.target.value).split(',')] }))}
+                                        value={marks.weaknesses.toString()}
+                                    />
+
+                                    <select className="mt-2 w-full py-2 px-3" value={marks.result} onChange={e => setMarks(prevMarks => ({ ...prevMarks, result: e.target.value }))}>
+                                        <option value="">Choose whether the candidate is selected</option>
+                                        <option value="selected">Select</option>
+                                        <option value="rejected">Reject</option>
+                                    </select>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={handleSubmitMarks}>
+                                        Submit Results
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
+                        </> : null
+                }
             </>
         </>
     )
